@@ -1,0 +1,9 @@
+numba
+numpy
+torch
+tqdm
+more-itertools
+tiktoken==0.3.3
+ffmpeg
+openai
+openai-whisper @ git+https://github.com/openai/whisper.git
