@@ -6,7 +6,7 @@ import whisper
 
 def transcribe_with_whisper():
     # Properties picked up from: https://github.com/openai/whisper/blob/main/whisper/transcribe.py
-    audio_file = "transcribe-app/resources/bolt.m4a"
+    audio_file = "transcribe-app/src/core/resources/bolt.m4a"
     model_options = {
         "name": "tiny",
         "download_root": None,
@@ -39,7 +39,7 @@ def transcribe_with_whisper():
         "append_punctuations": "\"\'.。,，!！?？:：”)]}、"
     }
     writer_options = {
-        "output_dir": "transcribe-app/resources",
+        "output_dir": "transcribe-app/src/core/resources",
         "output_format": "all"
     }
     writer_preferences = {
