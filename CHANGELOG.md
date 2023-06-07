@@ -1,17 +1,15 @@
 # Changelog
 
-All notable changes to this project will be documented in this file, starting with version 0.17.7.
+All notable changes to this project will be documented in this file, starting with version 0.0.1
 
-## [0.0.1] - 3/5/2023
-
-### Added
-
-- Basic package setup
+## [0.0.2] - 8/6/2023
 
 ### Changed
 
-- N/A
+- Fast-whisper implementation from native
 
-### Fixes
+## [0.0.1] - 3/6/2023
 
-- N/A
+### Added
+
+- Basic package setup & whisper native implementation
