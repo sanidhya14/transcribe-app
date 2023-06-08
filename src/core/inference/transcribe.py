@@ -1,80 +1,48 @@
 from faster_whisper import WhisperModel
-from faster_whisper.transcribe import Segment, TranscriptionInfo
-from typing import BinaryIO, List, NamedTuple, Optional, Union, Iterable
-import numpy as np
-
-# See Args from: https://github.com/guillaumekln/faster-whisper/blob/d4222da952fde2aa4064aad820e207d0c7a9de75/faster_whisper/transcribe.py#L187
-class TranscriptionResult(NamedTuple):
-    segments: Iterable[Segment]
-    info: TranscriptionInfo
+from ..models.transcription import TranscriptionInferenceOptions, TranscriptionResult, FasterWhisperModelOptions
 
 def transcribe_with_faster_whisper(
-        audio: Union[str, BinaryIO, np.ndarray],
-        language: str = "en",
-        task: str = "transcribe",
-        best_of: int = 5,
-        beam_size: int = 5,
-        patience: float = 1,
-        length_penalty: float = 1,
-        suppress_tokens: Optional[List[int]] = [-1],
-        initial_prompt: str = None,
-        condition_on_previous_text: bool = True,
-        compression_ratio_threshold: float = 2.4,
-        log_prob_threshold: float = -1.0,
-        no_speech_threshold: float = 0.6,
-        word_timestamps: bool = True,
-        prepend_punctuations: str = "\"\'“¿([{-",
-        append_punctuations: str = "\"\'.。,，!！?？:：”)]}、",
+        model: WhisperModel,
+        inference_options: TranscriptionInferenceOptions
     ) -> TranscriptionResult:
 
-    model = get_model_instance()
     segments, info = model.transcribe(
-        audio,
-        language=language,
-        task=task,
-        best_of=best_of,
-        beam_size=beam_size,
-        patience=patience,
-        length_penalty=length_penalty,
-        suppress_tokens=suppress_tokens,
-        initial_prompt=initial_prompt,
-        condition_on_previous_text=condition_on_previous_text,
-        compression_ratio_threshold=compression_ratio_threshold,
-        log_prob_threshold=log_prob_threshold,
-        no_speech_threshold=no_speech_threshold,
-        word_timestamps=word_timestamps,
-        prepend_punctuations=prepend_punctuations,
-        append_punctuations=append_punctuations,
-        vad_filter=True,
-        vad_parameters=dict(min_silence_duration_ms=2000),
+        inference_options.audio,
+        language=inference_options.language,
+        task=inference_options.task,
+        best_of=inference_options.best_of,
+        beam_size=inference_options.beam_size,
+        patience=inference_options.patience,
+        length_penalty=inference_options.length_penalty,
+        suppress_tokens=inference_options.suppress_tokens,
+        initial_prompt=inference_options.initial_prompt,
+        condition_on_previous_text=inference_options.condition_on_previous_text,
+        compression_ratio_threshold=inference_options.compression_ratio_threshold,
+        log_prob_threshold=inference_options.log_prob_threshold,
+        no_speech_threshold=inference_options.no_speech_threshold,
+        word_timestamps=inference_options.word_timestamps,
+        prepend_punctuations=inference_options.prepend_punctuations,
+        append_punctuations=inference_options.append_punctuations,
+        vad_filter=inference_options.vad_filter,
+        vad_parameters=inference_options.vad_parameters,
     )
     # The transcription will actually run here
     segments = list(segments)
     return TranscriptionResult(segments=segments, info=info)
 
-#See Args here: https://github.com/guillaumekln/faster-whisper/blob/d4222da952fde2aa4064aad820e207d0c7a9de75/faster_whisper/transcribe.py#LL90C11-L90C29
 def get_model_instance(
-        model_size: str = "small",
-        device: str = "cpu",
-        device_index: Union[int, List[int]] = 0,
-        compute_type: str = "int8",
-        cpu_threads: int = 0,
-        num_workers: int = 1,
-        download_root: Optional[str] = None,
-        # TODO: Update to fetch model only which is locally stored.
-        # Custom impl will be done to fetch from self managed remote & not HuggingFace
-        local_files_only: bool = False,
-):
-
+        model_options: FasterWhisperModelOptions
+    ) -> WhisperModel:
+    
     return WhisperModel(
-        model_size_or_path=model_size,
-        device=device,
-        device_index=device_index,
-        compute_type=compute_type,
-        cpu_threads=cpu_threads,
-        num_workers=num_workers,
-        download_root=download_root,
-        local_files_only=local_files_only,
+        model_size_or_path=model_options.model_size,
+        device=model_options.device,
+        device_index=model_options.device_index,
+        compute_type=model_options.compute_type,
+        cpu_threads=model_options.cpu_threads,
+        num_workers=model_options.num_workers,
+        download_root=model_options.download_root,
+        local_files_only=model_options.local_files_only,
     )
 
 # # TODO: Remove this native whisper implementation after stable release.

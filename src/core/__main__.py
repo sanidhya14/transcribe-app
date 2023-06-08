@@ -1,27 +1,27 @@
-from .inference.transcribe import transcribe_with_faster_whisper
-from .inference.transcribe import TranscriptionResult
+from .inference.transcribe import get_model_instance, transcribe_with_faster_whisper, TranscriptionResult
 from .utils.writer_utils import get_writer, log_result
+from .models.transcription import TransciptionOutputOptions, TranscriptionRequest, FasterWhisperModelOptions, TranscriptionInferenceOptions
 
-def main():
+def main(request: TranscriptionRequest):
+    model = get_model_instance(
+        request.model_options
+    )
     result = transcribe_with_faster_whisper(
-        "transcribe-app/src/core/resources/bolt.m4a",
+        model,
+        request.inference_options,
     )
-    process_result(
-        result=result,
-        output_dir="results",
+    process_transcription_result(
+        result,
+        request.output_options,
     )
 
-def process_result(
+def process_transcription_result(
         result: TranscriptionResult,
-        output_dir: str = None,
-        output_format: str = "all",
-        highlight_words: bool = False,
-        max_line_width: int = None,
-        max_line_count: int = None,
+        output_options: TransciptionOutputOptions,
     ):
     writer = get_writer(
-        output_dir=output_dir,
-        output_format=output_format,
+        output_dir=output_options.output_dir,
+        output_format=output_options.output_format,
     )
 
     # Result Debugging
@@ -29,12 +29,21 @@ def process_result(
 
     writer(
         result,
-        "output-txt", {
-            "highlight_words": highlight_words,
-            "max_line_count": max_line_count,
-            "max_line_width": max_line_width
-        }
+        output_options.output_file_name,
+        output_options._asdict(),
     )
 
 if __name__ == "__main__":
-    main()
+    main(TranscriptionRequest(
+        model_options=FasterWhisperModelOptions(
+            model_size="small",
+            device="cpu",
+        ),
+        inference_options=TranscriptionInferenceOptions(
+            audio="bolt.m4a",
+        ),
+        output_options=TransciptionOutputOptions(
+            output_file_name="result-v2",
+            output_dir="results",
+        ),
+    ))
