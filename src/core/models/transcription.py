@@ -35,7 +35,10 @@ class TranscriptionInferenceOptions(NamedTuple):
     prepend_punctuations: str = "\"\'“¿([{-"
     append_punctuations: str = "\"\'.。,，!！?？:：”)]}、"
     vad_filter: bool = False
-    vad_parameters: dict = None
+    vad_parameters: dict = VadOptions(
+        min_silence_duration_ms=2000
+    )._asdict()
+    batch_size: int = 1
 
 class TransciptionOutputOptions(NamedTuple):
     output_file_name: str
