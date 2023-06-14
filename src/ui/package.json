@@ -5,6 +5,7 @@
   "author": "Creative Tim",
   "license": "See license in https://www.creative-tim.com/license",
   "description": "React version of Material Dashboard 2 by Creative Tim",
+  "main": "main.js",
   "bugs": {
     "url": "https://github.com/creativetimofficial/material-dashboard-react/issues"
   },
@@ -30,7 +31,8 @@
     "react-table": "7.8.0",
     "stylis": "4.1.4",
     "stylis-plugin-rtl": "2.1.1",
-    "yup": "1.1.1"
+    "yup": "1.1.1",
+    "electron": "25.1.0"
   },
   "scripts": {
     "start": "GENERATE_SOURCEMAP=false react-scripts start",
